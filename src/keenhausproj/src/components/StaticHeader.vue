@@ -1,8 +1,13 @@
 <template>
   <div>
-    <b-nav>
-      <b-nav-item active>Home</b-nav-item>
-    </b-nav>
+    <b-navbar type="dark" variant="dark">
+      <b-navbar-brand href="#">Keen Haus</b-navbar-brand>
+      <b-navbar-nav>
+        <b-nav-item-dropdown text="Projects" right>
+          <b-dropdown-item href="#">Instagram Plant</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-navbar>
   </div>
 </template>
 
