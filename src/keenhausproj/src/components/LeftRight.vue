@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid="md">
+  <b-container fluid="lg">
     <b-row>
       <b-col cols="6" v-html="msg" class="text-left"></b-col>
       <b-col cols="6"><b-img class="lf-img" :alt="img_alt" v-bind:src="require('@/assets/' + img + '')"></b-img></b-col>

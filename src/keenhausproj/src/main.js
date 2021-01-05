@@ -10,6 +10,12 @@ Vue.use(ElementUI);
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
 
+import VueGistEmbed from 'vue-gist-embed';
+Vue.use(VueGistEmbed);
+
+// import VueEmbedGist from "vue-embed-gist";
+// Vue.use(VueEmbedGist);
+
 Vue.config.productionTip = false
 
 new Vue({

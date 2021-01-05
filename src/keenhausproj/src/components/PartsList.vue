@@ -1,9 +1,9 @@
 <template>
-  <b-container fluid="md">
-    <strong>{{ title }}</strong>
+  <b-container fluid="lg" class="text-left">
+    <div class="pl-3"><strong>{{ title }}</strong></div>
     <b-list-group>
       <b-list-group-item class="text-left" v-for="part in parts" :key="part"
-        v-html="part"></b-list-group-item>
+        v-html="'- '+part"></b-list-group-item>
       <!-- <b-list-group-item>Raspberry Pi Zero W (with camera)</b-list-group-item>
       <b-list-group-item>Capacitive Soil Sensor</b-list-group-item>
       <b-list-group-item>Buncha wires</b-list-group-item> -->
@@ -29,5 +29,8 @@
   .v-list-item__content{
     text-align: left;
     display: grid;
+  }
+  .list-group-item{
+    border:0px;
   }
 </style>
