@@ -7,7 +7,9 @@
     <StaticHeader>
     </StaticHeader>
     <spacer/>
-    <b-container><h2 class="text-center">Intro</h2></b-container>
+    <h2 class="text-center">Automated Instagram Plant Posts</h2>
+    <spacer/>
+    <SectionTitle title="Intro" />
     <LeftRight 
       img_alt = "alt desc" 
       img = "compscrop.jpg" 
@@ -43,13 +45,13 @@
     <spacer/>
     <spacer/>
 
-    <SectionTitle title="Configuring Arduino" />
+    <SectionTitle title="Configuring the Arduino" />
     <spacer/>
     <LeftRight
       img = "ArduinoCrop.jpg"
       img_alt = "Arduino Nano and moisture sensor"
-      msg = "<p>The soil sensor that I bought has three pins, GND, VCC, and Analog Out. Because of its low power requirements, I decided to power it up using the mcu using the 5V and Ground pins. The Analog output pin will give us the voltage based on how humid or dry the soil is, so I connected it to the Arduino's A0 pin.</p>   <p>In order to understand what was going on a bit better, I decided to translate the voltage to a percentage. It is much easier to understand '90% humid' than '503 humid'</p>
-          <p>Finally, we send the package via USB using Serial command.</p>
+      msg = "<p>The soil sensor that I bought has three pins, GND, VCC, and Analog Out. Because of its low power requirements, I decided to power it up using the mcu using the 5V and Ground pins. The Analog output pin will give us the voltage based on how humid or dry the soil is, so I connected it to the Arduino's A0 pin.</p>   <p>In order to understand the readings bit better, I decided to translate the voltage to a percentage. The mcu reads a value between 0-1024, so it is not super clear. It is much easier (for a human) to understand '90% humid' than '503 humid'.</p>
+          <p>Finally, we send the readings to the Raspberry Pi via USB using Serial command.</p>
     
           <b-row>
             <b-col cols='3'></b-col>
