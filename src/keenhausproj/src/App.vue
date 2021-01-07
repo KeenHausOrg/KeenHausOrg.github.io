@@ -62,7 +62,57 @@
           <p>Note: These things have to be calibrated in order to work properly, read more about it <a href='https://makersportal.com/blog/2020/5/26/capacitive-soil-moisture-calibration-with-arduino'>here</a>. It can be a dull read, so the tl;dr: measure in water and in air and those will be your max vals. Then look at my code for a working example.</p>"/>
     
 
+    <spacer/>
+    <SectionTitle title="Configuring the Raspberry Pi - Serial" />
+    <spacer/>
+    <b-container class="">
+      <b-row>
+        <p>Configuring the Raspberry Pi was a bit more challenging. On top of that the Raspberry Pi is the device that is doing all the heavy lifting, taking pictures, and uploading everything to the internet, so I will split this section for each individual task to make it easier to follow.</p>
+    <p>Started by installing the <a href='https://arduino.github.io/arduino-cli/getting-started/'>Arduino CLI</a> and proceeded to look for my board. I noticed though that I could not find my board on my list of connected devices.</p>
+      </b-row>
+      <b-row>
+        <CodeSnippet code = "$ arduino-cli board list
+Port         Type              Board Name              FQBN                 Core
+/dev/ttyACM1 unknown unknown
+/dev/ttyUSB0 Serial Port (USB) unknown" />
+      </b-row>
+      <b-row>
+        <p>Maybe the connection still works just the name is goofed up? I tried Sara's command (tail) to read the serial input, but it was not really working. So instead I tried using cat instead. It worked! Since Linux treats ports as files, I was able to read it it, and I saw the input coming in at regular intervals!</p>
+      </b-row>
+      <b-row>
+        <CodeSnippet code = "$ cat /dev/ttyUSB0
+Humidity: 0%
+Humidity: 0%
+..." />
+      </b-row>
+      <b-row>
+        <p>Turns out, the board appearing as "unknown" is a known issue and explained better in this <a href='https://forum.arduino.cc/index.php?topic=676741.0'>post</a>. But with the Raspberry connected, now is time to read the data. We use python (pyserial) to read the serial data coming from the arduino. Because I dont know if I have read a complete message (we are reading bytes as they come), I decided that a "complete" message must end in a new line character.</p>
+      </b-row>
+      <b-row>
+        <CodeSnippet code="ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=5)
+sample = ser.read(200) # pull 200 bytes off serial
+sample_list = sample.decode('utf-8').split('\n')
+...
+reading = reading.strip()
+  reading_kv = reading.split(':')
+  if len(reading_kv) == 2:
+    key = reading_kv[0]
+    val = reading_kv[1]
+    if key == 'Percent':
+      return val
+...
+"/>
+      </b-row>
+    </b-container>
+    
+    <spacer/>
+    <SectionTitle title="Configuring the Raspberry Pi - Taking a picture" />
+    <spacer/>
 
+    <RightLeft msg = "<p></p>" 
+               img = "ArduinoCrop.jpg"
+               img_alt = "ArduinoCrop.jpg" />
+    
 <!-- parts = ['Arduino Nano (but pretty much any arduino would do) []',
               'Raspberry Pi Zero W (with camera)',
               'Capacitive Soil Sensor',
@@ -89,17 +139,20 @@ import LeftRight from './components/LeftRight.vue'
 import PartsList from './components/PartsList.vue'
 import Spacer from './components/Spacer.vue'
 import SectionTitle from './components/SectionTitle.vue'
-// import EmbedGist from './components/EmbedGist.vue'
+import RightLeft from './components/RightLeft.vue'
+import CodeSnippet from './components/CodeSnippet.vue'
 
 export default {
   name: 'App',
   components: {
-    StaticHeader, LeftRight,
+    StaticHeader, LeftRight, RightLeft,
     PartsList,
     Spacer,
-    SectionTitle
+    SectionTitle,
+    CodeSnippet
     // EmbedGist
-  }
+  },
+    
 }
 </script>
 
