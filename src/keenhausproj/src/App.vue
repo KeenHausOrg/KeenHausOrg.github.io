@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <link rel="stylesheet" href='https://github.githubassets.com/assets/frameworks-052cbe13e4b93c9b8358a7178885c1a0.css'>
-    <link rel="stylesheet" href='https://gist.github.com/stylesheets/gist/embed.css'>
-    <link rel="stylesheet" href='https://github.githubassets.com/assets/github-cd91185ab4f65b2ac0a8dd8d9b6f6db4.css'>
-    <link rel="stylesheet" href='https://github.githubassets.com/assets/gist-d6025babd248cbbd2f271e14e4e6f85c.css'>
     <StaticHeader>
     </StaticHeader>
     <spacer/>
