@@ -13,7 +13,7 @@
     <LeftRight 
       img_alt = "alt desc" 
       img = "compscrop.jpg" 
-      msg="A friend of mine showed me this cool post about a plant that automatically posts tweets based on the soil moisture (<a href='http://sarabee.github.io/2020/05/10/plant-tweets-part-2/'>link</a>). I have done some similar work on my own home and thought I could grab this post and take it a step further. In this post I will teach you how to use an arduino and a raspberry pi with a camera to take a picture of the your plant, record the soil moisture, and create an instagram post." />
+      msg="<p>A friend of mine showed me this cool post about a plant that automatically posts tweets based on the soil moisture (<a href='http://sarabee.github.io/2020/05/10/plant-tweets-part-2/'>link</a>). I have done some similar work on my own home and thought I could grab this post and take it a step further. In this post I will teach you how to use an arduino and a raspberry pi with a camera to take a picture of the your plant, record the soil moisture, and create an instagram post.</p><p>If you just want the source code, you can scroll all the way to the bottom and find a link to my Github repo.</p>" />
     <spacer/>
     <parts-list 
       :parts = "['Arduino Nano (but pretty much any arduino would do) {<a href=\'https://www.sparkfun.com/products/15590\'>Link</a>}',
@@ -204,31 +204,12 @@ imgurLink = responseObj['data']['link']" />
     <SectionTitle title="Finished Product + Next Steps"/>
     <spacer />
     <b-container>
-      <b-row><b-col><RightLeft msg="<p>Putting all these components together, and you have a system now that checks the soil of your plant, takes a picture, and sends you an MMS with all the info you need to create your Instagram post. Too bad Instagram does not have this function, so we just had to improvise, adapt and overcome. I bought a couple of enclosures for the nano and the raspberry pi, and a couple of shrink tubes to protect the device to try to give it a bit more of a consumer product look.</p><p>As for 'next steps', I would like to improve the trigger to take a soil reading. Right now its polling ever X seconds, but a more sophisticated approach would be to either have the Pi send the trigger signal, and wait for a response from the device. Most likely using the USB as a 2 way communication port.</p>"  img="ArduinoCrop.jpg" img_alt="Finished product"/>
+      <b-row><b-col><RightLeft msg="<p>Putting all these components together, and you have a system now that checks the soil of your plant, takes a picture, and sends you an MMS with all the info you need to create your Instagram post. Too bad Instagram does not have this function, so we just had to improvise, adapt and overcome. I bought a couple of enclosures for the nano and the raspberry pi, and a couple of shrink tubes to protect the device to try to give it a bit more of a consumer product look.</p><p>As for 'next steps', I would like to improve the trigger to take a soil reading. Right now its polling ever X seconds, but a more sophisticated approach would be to either have the Pi send the trigger signal, and wait for a response from the device. Most likely using the USB as a 2 way communication port.</p><p>Hope you liked this project. You can find the complete source code on my <a href='https://github.com/KeenHausOrg/DetectorSendData'>GITHUB Repo</a></p>"  img="finished.jpg" img_alt="Finished product"/>
       </b-col></b-row>
-      <b-row><b-col><p>Hope you liked this project. You can find the complete source code on the repo</p></b-col></b-row>
     </b-container>
 
-    <!-- <RightLeft msg = "<p></p>" 
-               img = "ArduinoCrop.jpg"
-               img_alt = "ArduinoCrop.jpg" /> -->
-    
-<!-- parts = ['Arduino Nano (but pretty much any arduino would do) []',
-              'Raspberry Pi Zero W (with camera)',
-              'Capacitive Soil Sensor',
-              'Buncha wires'] -->
-
-    <!-- <div>Parts list:</div>
-    <b-list-group>
-      <b-list-group-item>Arduino Nano (but pretty much any arduino would do) [<a href="https://www.sparkfun.com/products/15590">Link</a>]</b-list-group-item>
-      <b-list-group-item>Raspberry Pi Zero W (with camera)</b-list-group-item>
-      <b-list-group-item>Capacitive Soil Sensor</b-list-group-item>
-      <b-list-group-item>Buncha wires</b-list-group-item>
-    </b-list-group> -->
-    <!-- <img src="./assets/compscrop.jpg"> -->
-    <!-- <img alt = "Vue logo" src = "./assets/logo.png"> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    
+    <spacer/>
+    <Footer />
   </div>
 </template>
 
@@ -241,6 +222,7 @@ import Spacer from './components/Spacer.vue'
 import SectionTitle from './components/SectionTitle.vue'
 import RightLeft from './components/RightLeft.vue'
 import CodeSnippet from './components/CodeSnippet.vue'
+import Footer from './components/Footer.vue'
 
 export default {
   name: 'App',
@@ -249,7 +231,8 @@ export default {
     PartsList,
     Spacer,
     SectionTitle,
-    CodeSnippet
+    CodeSnippet,
+    Footer
     // EmbedGist
   },
     
