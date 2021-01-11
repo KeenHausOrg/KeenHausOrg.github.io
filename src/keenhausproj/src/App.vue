@@ -63,11 +63,11 @@
     
 
     <spacer/>
-    <SectionTitle title="Configuring the Raspberry Pi - Serial" />
+    <SectionTitle title="Configuring the Pi - Serial" />
     <spacer/>
     <b-container class="">
       <b-row>
-        <p>Configuring the Raspberry Pi was a bit more challenging. On top of that the Raspberry Pi is the device that is doing all the heavy lifting, taking pictures, and uploading everything to the internet, so I will split this section for each individual task to make it easier to follow.</p>
+        <p>Configuring the Pi was a bit more challenging. On top of that the Raspberry Pi is the device that is doing all the heavy lifting, taking pictures, and uploading everything to the internet, so I will split this section for each individual task to make it easier to follow.</p>
     <p>Started by installing the <a href='https://arduino.github.io/arduino-cli/getting-started/'>Arduino CLI</a> and proceeded to look for my board. I noticed though that I could not find my board on my list of connected devices.</p>
       </b-row>
       <b-row>
@@ -106,12 +106,112 @@ reading = reading.strip()
     </b-container>
     
     <spacer/>
-    <SectionTitle title="Configuring the Raspberry Pi - Taking a picture" />
+    <SectionTitle title="Configuring the Pi - Taking a picture" />
     <spacer/>
+    <b-container>
+      <b-row>
+        <b-col cols="12">
+          <p>The Raspberry Pi Zero has a nifty webcam that I am going to use to take pictures of my plants. So that whenever I make a reading, I can also attach an image to it and post it on Instagram. We start by making sure the camera works well, in order to do that, I followed this guide of <a href='https://picamera.readthedocs.io/en/release-1.13/quickstart.html'>Picamera</a> to take a test photo using the raspistill command.</p>
+        </b-col>
+      </b-row>
+      <b-row>
+        <code-snippet code="raspistill -o image.jpg"></code-snippet>
+      </b-row>
+      <b-row>
+        <p>At first I had trouble installing raspistill. It seemed that the PATH did not have the correct value for raspistill, so I had to add it manually myself, or call it using the whole path.</p>
+        <p>After a successful test that verifies the cam is working, the next step is to add code to our python script so we can take a picture programmatically. Install the <a href='https://picamera.readthedocs.io/en/release-1.13/'>PiCamera</a> python library via pip, then you can use it like the snippet below:</p>
+      </b-row>
+      <b-row><CodeSnippet code = 'import PiCamera
+def TakePicture():
+  camera = PiCamera()
+  camera.start_preview()
+  sleep(4) #camera needs a sec to focus. 2 secs min
+  fileName = "plantcam.jpg"
+  camera.capture(fileName)
+  camera.stop_preview()' /></b-row>
+    </b-container>
 
-    <RightLeft msg = "<p></p>" 
+    <spacer />
+    <SectionTitle title="Configuring the Pi - Upload image to IMGUR"/>
+    <spacer />
+    <b-container>
+      <b-row>
+        <b-col cols="12"><p>As of right now, Instagram does not allow automated tools to create new posts via their API, so I had to find a way to make it easy for myself to create a new post using the information already gathered. I decided then to send myself an MMS using Twilio that will contain all the info necessary to create a post manually.</p>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col cols="12">
+          <p>In order to send an MMS, Twilio requires your picture to be hosted online. We can use IMGUR's API to upload the image. In order to do this you will need a bearer token for authentication. Follow these steps to get one:</p>
+          <ol>
+            <li>Create an account on imgur.com</li>
+            <li><a href='https://api.imgur.com/oauth2/addclient'>Register a new application</a>. This will provide you with an application ID (AppID) and an application secret (AppSecret).</li>
+            <li>Using postman, in the Authorization section, select OAUTH2 and fill out the fields as shown in this image (remember to replace {} variables with your appId and AppSecret). Record the bearer token and refresh tokens.<br><a href="require('@/assets/imgur_postman.jpg')"><b-img thumbnail fluid alt="Postman reference"  v-bind:src="require('@/assets/imgur_postman.jpg')" style="max-height:200px"/><div>Click to enlarge</div></a></li>
+          </ol>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <p>You can follow the <a href='https://apidocs.imgur.com/'>official guide here</a> for more details.</p>
+          <p>With your new tokens you can upload images using the following code, and record the final url:</p>
+          <CodeSnippet code="multipart_form_data = {
+    'image': (pictureName, open(_picturePath+pictureName, 'rb')),
+    'type': (None, 'file'),
+    'name': (None, pictureName),
+    'title': (None, 'Automatic picture upload')
+}
+headers = {'Authorization': _imgurBearerToken}
+
+response = requests.post(_imgurAPIUploadUrl, files=multipart_form_data,  headers=headers)
+responseObj = json.loads(response.content)
+imgurLink = responseObj['data']['link']" />
+        </b-col>
+      </b-row>
+    </b-container>
+    
+    <spacer/>
+    <SectionTitle title="Configuring the Pi - Sending MMS with Twilio" />
+    <spacer />
+
+    <b-container>
+      <b-row>
+        <b-col>
+          <p>Next step is to send the actual MMS. I chose Twilio because it is SO cheap ($0.02 per message) and fairly straightforward to send a message. The first step is to create an account and get your own SID and Secret from their portal. I got it from twilio.com/console. Then you will have to pip install the Twiolio REST library</p>
+          <CodeSnippet code="pip install twilio"/>
+          <p>Then you can use the following code to send your MMS.</p>
+          <CodeSnippet code="from twilio.rest import Client
+
+  def SendMMS(self, message, imageLink):
+    account_sid = TWILIO_ACCOUNT_SID
+    auth_token = TWILIO_SECRET
+    apiKeySID = TWILIO_APIKEY
+    client = Client(apiKeySID,auth_token, account_sid)
+
+    message = client.messages \
+        .create(
+            body = message,
+            from = fromNumber,
+            to = toNumber,
+            media_url=[imageLink],
+        )" />
+        </b-col>
+      </b-row>
+      <b-row>
+        
+      </b-row>
+    </b-container>
+
+    <spacer />
+    <SectionTitle title="Finished Product + Next Steps"/>
+    <spacer />
+    <b-container>
+      <b-row><b-col><RightLeft msg="<p>Putting all these components together, and you have a system now that checks the soil of your plant, takes a picture, and sends you an MMS with all the info you need to create your Instagram post. Too bad Instagram does not have this function, so we just had to improvise, adapt and overcome. I bought a couple of enclosures for the nano and the raspberry pi, and a couple of shrink tubes to protect the device to try to give it a bit more of a consumer product look.</p><p>As for 'next steps', I would like to improve the trigger to take a soil reading. Right now its polling ever X seconds, but a more sophisticated approach would be to either have the Pi send the trigger signal, and wait for a response from the device. Most likely using the USB as a 2 way communication port.</p>"  img="ArduinoCrop.jpg" img_alt="Finished product"/>
+      </b-col></b-row>
+      <b-row><b-col><p>Hope you liked this project. You can find the complete source code on the repo</p></b-col></b-row>
+    </b-container>
+
+    <!-- <RightLeft msg = "<p></p>" 
                img = "ArduinoCrop.jpg"
-               img_alt = "ArduinoCrop.jpg" />
+               img_alt = "ArduinoCrop.jpg" /> -->
     
 <!-- parts = ['Arduino Nano (but pretty much any arduino would do) []',
               'Raspberry Pi Zero W (with camera)',
